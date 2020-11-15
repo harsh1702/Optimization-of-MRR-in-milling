@@ -1,0 +1,7 @@
+s = iw
+G(s) is the transfer function, defined below equation (12)
+
+In the code set the constarint functions exactly as per what is given in: -
+Eqn 23, 24, 25, 26
+
+The constants in the penalty function should be set up as per what is given on the 7th page.
