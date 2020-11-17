@@ -7,7 +7,7 @@ n = 2;
 
 %% Decalring the tolerance
 
-tol = 10^-3;    %consider reducing the value of tol
+tol = 10^-12;
 
 %% first we do an unconstrained optimization for the initial point
 
@@ -45,11 +45,16 @@ while (err > tol)
 
     %unsure about the transposes that are required here, because I haven't
     %defined x yet, according to what has been writen x should be a row vector
-    X = transpose(X) - inv(J(X(1), X(2)))*g(X(1), X(2));
-    X = transpose(X);  %gets back the row vector
+    X_new = transpose(X) - inv(J(X(1), X(2)))*g(X(1), X(2));
+    %inv(J(X(1), X(2)))*g(X(1), X(2))
+    
+    err = abs(X_new - X);
+    
+    X = transpose(X_new);  %gets back the row vector
+    %X
     c = alpha.*c;
     
-    err = f(X(1), X(2));    %the optimization should stop when the value of f is 0 ideally (here it is given by tol)
+    %err = f(X(1), X(2));    %the optimization should stop when the value of f is 0 ideally (here it is given by tol)
 end
 
 
