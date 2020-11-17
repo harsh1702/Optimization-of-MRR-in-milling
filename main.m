@@ -24,6 +24,8 @@ else
     f_min = matlabFunction(q, 'Vars', {x});
     [X, max, exitflag] = fminsearch(f_min, X0);
 end
+
+err = 100;
 %update x0 with the value at which unconstrained optimization occurs
     
 %% find the gradient of q and find x*(c)
@@ -33,19 +35,21 @@ alpha = 10; %set the multiplier value
 
 while (err > tol)
     [q, f] = sympenfunc(X,c);
-    g = gradient(q);
+    syms x1 x2
+    g(x1, x2) = gradient(q(x1, x2), [x1, x2]);
     %[G1, G2, G3] = gradient(q);
     %g = [G1; G2; G3];
 
-    J = jacobian([G1, G2, G3], [x(1), x(2), x(3)]); %using the Jacobian matrix method to solve the system of non-linear equations
+    syms x1 x2
+    J(x1, x2) = jacobian(g, [x1, x2]); %using the Jacobian matrix method to solve the system of non-linear equations
 
     %unsure about the transposes that are required here, because I haven't
     %defined x yet, according to what has been writen x should be a row vector
-    x = tr(x) - g/J;
-    x = tr(x);  %gets back the row vector
+    X = transpose(X) - inv(J(X(1), X(2)))*g(X(1), X(2));
+    X = transpose(X);  %gets back the row vector
     c = alpha.*c;
     
-    err = f;    %the optimization should stop when the value of f is 0 ideally (here it is given by tol)
+    err = f(X(1), X(2));    %the optimization should stop when the value of f is 0 ideally (here it is given by tol)
 end
 
 
