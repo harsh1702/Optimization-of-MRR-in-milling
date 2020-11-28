@@ -13,6 +13,6 @@ function [q, f] = sympenfunc(X, c)
     
     f = c.*([max(0, F1), max(0, F2), max(0, F3)]*[f1.^2; f2.^2; f3.^2]);
     %f = c/2.*((max(0, f1)).^2 + (max(0, f2)).^2 + (max(0, f3).^2));       % R * constraint function
-    q_inter = symfun(0.5.*((x(1)-3).^2 + (x(2)-2).^2), x);
-    q = q_inter + f;                                                      % Objective function
+    q_inter = symfun(0.5.*((x(1)-3).^2 + (x(2)-2).^2), x);                 % Objective function
+    q = q_inter + f;                                                      
 end
