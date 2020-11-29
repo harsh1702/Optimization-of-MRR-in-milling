@@ -22,19 +22,20 @@ if (type == 'max')
     [X, max, exitflag] = fminsearch(f_max, X0);
 else
     f_min = matlabFunction(q, 'Vars', {x});
-    [X, max, exitflag] = fminsearch(f_min, X0);
+    [X, min, exitflag] = fminsearch(f_min, X0);
 end
 
-err = 100;
+err = [100, 100];
 %update x0 with the value at which unconstrained optimization occurs
     
 %% find the gradient of q and find x*(c)
 
+pass = 1;   %Since f = 0 should not be considered in the first pass
 c = 10000;  %some large initial value
 alpha = 10; %set the multiplier value
 
-while (err > tol)
-    [q, f] = sympenfunc(X,c);
+%while (all(err > tol) || logical(double(f(X(1), X(2)) > tol)))
+while (logical(double(f(X(1), X(2)) > tol)) || pass == 1)    
     syms x1 x2
     g(x1, x2) = gradient(q(x1, x2), [x1, x2]);
     %[G1, G2, G3] = gradient(q);
@@ -48,11 +49,15 @@ while (err > tol)
     X_new = transpose(X) - inv(J(X(1), X(2)))*g(X(1), X(2));
     %inv(J(X(1), X(2)))*g(X(1), X(2))
     
-    err = abs(X_new - X);
+    %err = abs(transpose(X_new) - X);
     
     X = transpose(X_new);  %gets back the row vector
+    
+    [q, f] = sympenfunc(X,c);
+    
     %X
     c = alpha.*c;
+    pass = 0;
     
     %err = f(X(1), X(2));    %the optimization should stop when the value of f is 0 ideally (here it is given by tol)
 end
