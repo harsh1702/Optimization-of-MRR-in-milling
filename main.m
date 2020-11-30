@@ -1,5 +1,5 @@
 %% Here we have to declare whether we are maximizing or minimizing the function, not needed for the final project
-%uncooment the variable input parameters later
+%uncomment the variable input parameters later
 type = 'min';
 n = 2;
 %type = input('enter whether you would maximize or minimize');
@@ -8,6 +8,7 @@ n = 2;
 %% Decalring the tolerance
 
 tol = 10^-12;
+tol2 = 10^-3;
 
 %% first we do an unconstrained optimization for the initial point
 
@@ -44,14 +45,19 @@ while (logical(double(f(X(1), X(2)) > tol)) || pass == 1)
     syms x1 x2
     J(x1, x2) = jacobian(g, [x1, x2]); %using the Jacobian matrix method to solve the system of non-linear equations
 
-    %unsure about the transposes that are required here, because I haven't
-    %defined x yet, according to what has been writen x should be a row vector
-    X_new = transpose(X) - inv(J(X(1), X(2)))*g(X(1), X(2));
+    iterations = 0;
+    
+    while (iterations < 100)    %iterations required to solve the equation (grad(q) = 0)
+        X_new = transpose(X) - inv(J(X(1), X(2)))*g(X(1), X(2));
+        if (abs(X_new - transpose(X)) < tol2)
+            break
+        end
+        X = transpose(X_new);       %gets back the row vector
+        iterations = iterations + 1;
+    end
     %inv(J(X(1), X(2)))*g(X(1), X(2))
     
     %err = abs(transpose(X_new) - X);
-    
-    X = transpose(X_new);  %gets back the row vector
     
     [q, f] = sympenfunc(X,c);
     
