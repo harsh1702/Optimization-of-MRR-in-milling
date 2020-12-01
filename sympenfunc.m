@@ -37,8 +37,8 @@ function [q, f] = sympenfunc(X, c)
 
 %     f = c.*([max(0, F1), max(0, F2), max(0, F3), max(0, F4), max(0, F5), max(0, F6)]*[f1.^2; f2.^2; f3.^2; f4.^2; f5.^2; f6.^2]);
     f = c.*([max(0, F1), max(0, F2), max(0, F3)]*[f1.^2; f2.^2; f3.^2]);        % R * constraint function
-%     q_inter = symfun(0.5.*((x(1)-3).^2 + (x(2)-2).^2), x);                 % Objective function
-    q_inter = symfun(0.5.*((x(1)-3).^2 + (x(1)*x(2) - 2)), x);             % x*y term is also included here
+     q_inter = symfun(0.5.*((x(1)-3).^2 + (x(2)-2).^2), x);                 % Objective function
+%     q_inter = symfun(0.5.*((x(1)-3).^2 + (x(1)*x(2) - 2)), x);             % x*y term is also included here
 %     q_inter = symfun((1 - N_p*sum(P_ck+P_dk).^2), x);
     q = q_inter + f;
 end
